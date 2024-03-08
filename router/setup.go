@@ -1,8 +1,7 @@
 package router
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/mbrunos/go-hire/handler"
 )
 
 func Setup() {
@@ -12,24 +11,9 @@ func Setup() {
 }
 
 func addRoutes(r *Router) {
-	r.GET("/api/jobs", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("Get all jobs")
-	})
-
-	r.POST("/api/jobs", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("Create job")
-	})
-
-	r.GET("/api/jobs/{id}", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("Get job by id")
-	})
-
-	r.PUT("/api/jobs/{id}", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("Update job by id")
-	})
-
-	r.DELETE("/api/jobs/{id}", func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode("Delete job by id")
-	})
-
+	r.GET("/api/jobs", handler.GetAllJobs)
+	r.POST("/api/jobs", handler.CreateJob)
+	r.GET("/api/jobs/{id}", handler.GetJob)
+	r.PUT("/api/jobs/{id}", handler.UpdateJob)
+	r.DELETE("/api/jobs/{id}", handler.DeleteJob)
 }
