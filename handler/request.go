@@ -38,6 +38,24 @@ func (c CreateJobRequest) Validate() error {
 	return nil
 }
 
+type UpdateJobRequest struct {
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	Company     string  `json:"company"`
+	Location    *string `json:"location"`
+	Level       string  `json:"level"`
+	Remote      *bool   `json:"remote"`
+	Salary      int64   `json:"salary"`
+}
+
+func (c UpdateJobRequest) Validate() error {
+	if c.Title != "" || c.Description != "" || c.Company != "" || c.Level != "" || c.Remote != nil || c.Salary > 0 {
+		return nil
+	}
+
+	return fmt.Errorf("request body is empty or malformed")
+}
+
 func errParamIsRequired(param, typ string) error {
 	return fmt.Errorf("param '%s' is required (type: %s)", param, typ)
 }
