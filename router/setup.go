@@ -6,6 +6,7 @@ import (
 
 func Setup() {
 	r := NewRouter()
+	handler.Init()
 	addRoutes(r)
 	r.Serve(":8080")
 }
