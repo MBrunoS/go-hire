@@ -1,10 +1,21 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
+
+	"github.com/mbrunos/go-hire/config"
+	"github.com/mbrunos/go-hire/schemas"
 )
 
 func GetAllJobs(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("Get all jobs")
+	jobs := []schemas.Job{}
+
+	db := config.GetDB()
+
+	if err := db.Find(&jobs).Error; err != nil {
+		sendError(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	sendSuccess(w, http.StatusOK, jobs)
 }
