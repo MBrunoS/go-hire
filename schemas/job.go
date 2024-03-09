@@ -13,7 +13,6 @@ type Job struct {
 	Description string     `json:"description"`
 	Company     string     `json:"company"`
 	Location    *string    `json:"location"`
-	Level       string     `json:"level"`
 	Remote      bool       `json:"remote"`
 	Salary      int64      `json:"salary"`
 }

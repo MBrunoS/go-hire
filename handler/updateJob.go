@@ -39,9 +39,6 @@ func UpdateJob(w http.ResponseWriter, r *http.Request) {
 	if body.Location != nil {
 		job.Location = body.Location
 	}
-	if body.Level != "" {
-		job.Level = body.Level
-	}
 	if body.Remote != nil {
 		job.Remote = *body.Remote
 	}

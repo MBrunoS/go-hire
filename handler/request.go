@@ -7,13 +7,12 @@ type CreateJobRequest struct {
 	Description string  `json:"description"`
 	Company     string  `json:"company"`
 	Location    *string `json:"location"`
-	Level       string  `json:"level"`
 	Remote      *bool   `json:"remote"`
 	Salary      int64   `json:"salary"`
 }
 
 func (c CreateJobRequest) Validate() error {
-	if c.Title == "" && c.Description == "" && c.Company == "" && c.Level == "" && c.Remote == nil && c.Salary <= 0 {
+	if c.Title == "" && c.Description == "" && c.Company == "" && c.Remote == nil && c.Salary <= 0 {
 		return fmt.Errorf("request body is empty or malformed")
 	}
 
@@ -25,9 +24,6 @@ func (c CreateJobRequest) Validate() error {
 	}
 	if c.Company == "" {
 		return errParamIsRequired("company", "string")
-	}
-	if c.Level == "" {
-		return errParamIsRequired("level", "string")
 	}
 	if c.Remote == nil {
 		return errParamIsRequired("remote", "bool")
@@ -43,13 +39,12 @@ type UpdateJobRequest struct {
 	Description string  `json:"description"`
 	Company     string  `json:"company"`
 	Location    *string `json:"location"`
-	Level       string  `json:"level"`
 	Remote      *bool   `json:"remote"`
 	Salary      int64   `json:"salary"`
 }
 
 func (c UpdateJobRequest) Validate() error {
-	if c.Title != "" || c.Description != "" || c.Company != "" || c.Level != "" || c.Remote != nil || c.Salary > 0 {
+	if c.Title != "" || c.Description != "" || c.Company != "" || c.Remote != nil || c.Salary > 0 {
 		return nil
 	}
 

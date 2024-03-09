@@ -6,11 +6,9 @@ import (
 )
 
 var (
-	logger *config.Logger
-	db     *gorm.DB
+	db *gorm.DB
 )
 
 func Init() {
-	logger = config.GetLogger()
 	db = config.GetDB()
 }

@@ -23,7 +23,6 @@ func CreateJob(w http.ResponseWriter, r *http.Request) {
 		Description: body.Description,
 		Company:     body.Company,
 		Location:    body.Location,
-		Level:       body.Level,
 		Remote:      *body.Remote,
 		Salary:      body.Salary,
 	}
