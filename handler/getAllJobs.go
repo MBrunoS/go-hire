@@ -7,6 +7,14 @@ import (
 	"github.com/mbrunos/go-hire/schemas"
 )
 
+// @Summary Get jobs
+// @Description Get all jobs
+// @Tags jobs
+// @Accept json
+// @Produce json
+// @Success 200 {object} GetJobsSuccessResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/jobs [get]
 func GetAllJobs(w http.ResponseWriter, r *http.Request) {
 	jobs := []schemas.Job{}
 

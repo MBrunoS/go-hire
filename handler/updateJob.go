@@ -8,6 +8,18 @@ import (
 	"github.com/mbrunos/go-hire/schemas"
 )
 
+// @BasePath /api
+// @Summary Update job
+// @Description Update an existing job
+// @Tags jobs
+// @Accept json
+// @Produce json
+// @Param id path string true "Job ID"
+// @Param body body UpdateJobRequest true "Request body"
+// @Success 200 {object} JobSuccessResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/jobs/{id} [put]
 func UpdateJob(w http.ResponseWriter, r *http.Request) {
 	body := UpdateJobRequest{}
 	json.NewDecoder(r.Body).Decode(&body)

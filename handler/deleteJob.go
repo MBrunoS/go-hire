@@ -7,6 +7,17 @@ import (
 	"github.com/mbrunos/go-hire/schemas"
 )
 
+// @BasePath /api
+// @Summary Delete job
+// @Description Delete an existing job
+// @Tags jobs
+// @Accept json
+// @Produce json
+// @Param id path string true "Job ID"
+// @Success 200 {object} JobSuccessResponse
+// @Failure 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/jobs/{id} [delete]
 func DeleteJob(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 

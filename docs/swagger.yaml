@@ -1,0 +1,210 @@
+definitions:
+  handler.CreateJobRequest:
+    properties:
+      company:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      remote:
+        type: boolean
+      salary:
+        type: integer
+      title:
+        type: string
+    type: object
+  handler.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handler.GetJobsSuccessResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/schemas.Job'
+        type: array
+    type: object
+  handler.JobSuccessResponse:
+    properties:
+      data:
+        $ref: '#/definitions/schemas.Job'
+    type: object
+  handler.UpdateJobRequest:
+    properties:
+      company:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      remote:
+        type: boolean
+      salary:
+        type: integer
+      title:
+        type: string
+    type: object
+  schemas.Job:
+    properties:
+      company:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      remote:
+        type: boolean
+      salary:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/jobs:
+    get:
+      consumes:
+      - application/json
+      description: Get all jobs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.GetJobsSuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get jobs
+      tags:
+      - jobs
+    post:
+      consumes:
+      - application/json
+      description: Create a new job
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateJobRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.JobSuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create job
+      tags:
+      - jobs
+  /api/jobs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing job
+      parameters:
+      - description: Job ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.JobSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Delete job
+      tags:
+      - jobs
+    get:
+      consumes:
+      - application/json
+      description: Get a job by ID
+      parameters:
+      - description: Job ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.JobSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get job
+      tags:
+      - jobs
+    put:
+      consumes:
+      - application/json
+      description: Update an existing job
+      parameters:
+      - description: Job ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateJobRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.JobSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update job
+      tags:
+      - jobs
+swagger: "2.0"

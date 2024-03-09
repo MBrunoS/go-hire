@@ -9,6 +9,17 @@ import (
 	"github.com/mbrunos/go-hire/schemas"
 )
 
+// @BasePath /api
+// @Summary Create job
+// @Description Create a new job
+// @Tags jobs
+// @Accept json
+// @Produce json
+// @Param body body CreateJobRequest true "Request body"
+// @Success 201 {object} JobSuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/jobs [post]
 func CreateJob(w http.ResponseWriter, r *http.Request) {
 	body := CreateJobRequest{}
 	json.NewDecoder(r.Body).Decode(&body)
