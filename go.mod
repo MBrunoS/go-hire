@@ -4,15 +4,19 @@ go 1.22.0
 
 require (
 	github.com/fatih/color v1.16.0
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
+	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/http-swagger/v2 v2.0.2
 	github.com/swaggo/swag v1.16.3
+	golang.org/x/crypto v0.21.0
 	gorm.io/driver/mysql v1.5.4
 	gorm.io/gorm v1.25.7
 )
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
@@ -24,6 +28,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/swaggo/files/v2 v2.0.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
