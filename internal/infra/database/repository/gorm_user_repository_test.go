@@ -3,7 +3,7 @@ package repository_test
 import (
 	"testing"
 
-	"github.com/mbrunos/go-hire/internal/entity"
+	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/internal/infra/database/repository"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"

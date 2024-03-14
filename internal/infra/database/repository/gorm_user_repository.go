@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/mbrunos/go-hire/internal/entity"
+	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/pkg/id"
 	"gorm.io/gorm"
 )

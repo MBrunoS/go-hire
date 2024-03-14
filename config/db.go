@@ -3,7 +3,7 @@ package config
 import (
 	"os"
 
-	"github.com/mbrunos/go-hire/schemas"
+	"github.com/mbrunos/go-hire/internal/core/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,7 +20,7 @@ func InitDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&schemas.Job{})
+	err = db.AutoMigrate(&entity.Job{}, &entity.User{})
 	if err != nil {
 		logger.ErrorF("Error migrating schema: %s", err)
 		return nil, err
