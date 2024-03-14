@@ -2,18 +2,22 @@ package entity
 
 import (
 	"errors"
+	"time"
 
 	"github.com/mbrunos/go-hire/pkg/id"
 )
 
 type Job struct {
-	ID          id.ID   `json:"id"`
-	Title       string  `json:"title"`
-	Description string  `json:"description"`
-	Company     string  `json:"company"`
-	Location    *string `json:"location"`
-	Remote      bool    `json:"remote"`
-	Salary      int64   `json:"salary"`
+	ID          id.ID      `json:"id"`
+	Title       string     `json:"title"`
+	Description string     `json:"description"`
+	Company     string     `json:"company"`
+	Location    *string    `json:"location"`
+	Remote      bool       `json:"remote"`
+	Salary      int64      `json:"salary"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 func NewJob(title, description, company string, location *string, remote bool, salary int64) *Job {
@@ -25,6 +29,8 @@ func NewJob(title, description, company string, location *string, remote bool, s
 		Location:    location,
 		Remote:      remote,
 		Salary:      salary,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
 }
 
