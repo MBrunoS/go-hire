@@ -4,26 +4,26 @@ import (
 	"errors"
 
 	"github.com/mbrunos/go-hire/pkg/id"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID       id.ID    `json:"id"`
-	Name     string   `json:"username"`
-	Email    string   `json:"email"`
-	Password Password `json:"-"`
+	ID       id.ID  `json:"id"`
+	Name     string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"-"`
 }
 
 func NewUser(name, email, password string) (*User, error) {
-	pass, err := NewPassword(password)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
-
 	return &User{
 		ID:       id.NewID(),
 		Name:     name,
 		Email:    email,
-		Password: *pass,
+		Password: string(hash),
 	}, nil
 }
 
@@ -45,5 +45,14 @@ func (u *User) Validate() error {
 		return errors.New("email is required")
 	}
 
+	if u.ComparePassword("") {
+		return errors.New("password is required")
+	}
+
 	return nil
+}
+
+func (u *User) ComparePassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	return err == nil
 }
