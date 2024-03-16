@@ -1,4 +1,4 @@
-package repository
+package interfaces
 
 import (
 	"github.com/mbrunos/go-hire/internal/core/entity"

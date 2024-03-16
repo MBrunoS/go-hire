@@ -2,15 +2,15 @@ package usecases
 
 import (
 	"github.com/mbrunos/go-hire/internal/core/entity"
-	"github.com/mbrunos/go-hire/internal/core/repository"
+	"github.com/mbrunos/go-hire/internal/core/entity/interfaces"
 	"github.com/mbrunos/go-hire/pkg/id"
 )
 
 type UserUseCase struct {
-	repository repository.UserRepository
+	repository interfaces.UserRepository
 }
 
-func NewUserUseCase(userRepository repository.UserRepository) *UserUseCase {
+func NewUserUseCase(userRepository interfaces.UserRepository) *UserUseCase {
 	return &UserUseCase{repository: userRepository}
 }
 

@@ -7,10 +7,10 @@ import (
 )
 
 type JobUseCase struct {
-	repository repository.JobRepository
+	repository interfaces.JobRepository
 }
 
-func NewJobUseCase(jobRepository repository.JobRepository) *JobUseCase {
+func NewJobUseCase(jobRepository interfaces.JobRepository) *JobUseCase {
 	return &JobUseCase{repository: jobRepository}
 }
 
