@@ -19,10 +19,10 @@ func NewLogger() *Logger {
 	writer := io.Writer(os.Stdout)
 
 	return &Logger{
-		debug:   log.New(writer, colorString("[DEBUG] ", color.FgCyan), log.Ldate|log.Ltime|log.Lshortfile),
-		info:    log.New(writer, colorString("[INFO] ", color.FgGreen), log.Ldate|log.Ltime|log.Lshortfile),
-		warning: log.New(writer, colorString("[WARNING] ", color.FgYellow), log.Ldate|log.Ltime|log.Lshortfile),
-		err:     log.New(writer, colorString("[ERROR] ", color.FgRed), log.Ldate|log.Ltime|log.Lshortfile),
+		debug:   log.New(writer, colorString("[DEBUG] ", color.FgCyan), log.Ldate|log.Ltime),
+		info:    log.New(writer, colorString("[INFO] ", color.FgGreen), log.Ldate|log.Ltime),
+		warning: log.New(writer, colorString("[WARNING] ", color.FgYellow), log.Ldate|log.Ltime),
+		err:     log.New(writer, colorString("[ERROR] ", color.FgRed), log.Ldate|log.Ltime),
 	}
 }
 

@@ -14,8 +14,5 @@ func sendError(w http.ResponseWriter, statusCode int, err error) {
 func sendSuccess(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	responseData := map[string]interface{}{
-		"data": data,
-	}
-	json.NewEncoder(w).Encode(responseData)
+	json.NewEncoder(w).Encode(data)
 }
