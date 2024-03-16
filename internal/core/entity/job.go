@@ -56,7 +56,7 @@ func (j *Job) Validate() error {
 	}
 
 	if j.Salary <= 0 {
-		return errors.New("salary is not valid")
+		return errors.New("salary is required and must be greater than 0")
 	}
 
 	return nil
