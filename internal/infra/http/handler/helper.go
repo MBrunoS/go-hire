@@ -3,8 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/mbrunos/go-hire/schemas"
 )
 
 func sendError(w http.ResponseWriter, statusCode int, err error) {
@@ -20,16 +18,4 @@ func sendSuccess(w http.ResponseWriter, statusCode int, data interface{}) {
 		"data": data,
 	}
 	json.NewEncoder(w).Encode(responseData)
-}
-
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
-
-type JobSuccessResponse struct {
-	Data schemas.Job `json:"data"`
-}
-
-type GetJobsSuccessResponse struct {
-	Data []schemas.Job `json:"data"`
 }
