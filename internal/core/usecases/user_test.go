@@ -3,6 +3,7 @@ package usecases
 import (
 	"testing"
 
+	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/pkg/id"
 	"github.com/stretchr/testify/mock"
@@ -14,14 +15,20 @@ func TestCreateUser(t *testing.T) {
 
 	repo.On("Create", mock.AnythingOfType("*entity.User")).Return(nil)
 
-	user, err := useCase.CreateUser("name", "email", "password")
+	input := &dto.CreateUserInputDTO{
+		Name:     "name",
+		Email:    "email",
+		Password: "password",
+	}
+
+	user, err := useCase.CreateUser(input)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
 	if user == nil {
 		t.Error("Expected user, got nil")
 	}
-	repo.AssertCalled(t, "Create", user)
+	repo.AssertCalled(t, "Create", mock.AnythingOfType("*entity.User"))
 }
 
 func TestFindUserByEmail(t *testing.T) {
@@ -47,14 +54,20 @@ func TestUpdateUser(t *testing.T) {
 
 	repo.On("Update", mock.Anything).Return(nil)
 
-	user, err := useCase.UpdateUser(id.NewID().String(), "name", "email", "password")
+	input := &dto.UpdateUserInputDTO{
+		Name:     "name",
+		Email:    "email",
+		Password: "password",
+	}
+
+	user, err := useCase.UpdateUser(id.NewID().String(), input)
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
 	if user == nil {
 		t.Error("Expected user, got nil")
 	}
-	repo.AssertCalled(t, "Update", user)
+	repo.AssertCalled(t, "Update", mock.AnythingOfType("*entity.User"))
 }
 
 func TestDeleteUser(t *testing.T) {

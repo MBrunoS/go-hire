@@ -3,6 +3,7 @@ package usecases
 import (
 	"testing"
 
+	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/pkg/id"
 	"github.com/stretchr/testify/assert"
@@ -15,15 +16,26 @@ func TestCreateJob(t *testing.T) {
 
 	repo.On("Create", mock.AnythingOfType("*entity.Job")).Return(nil)
 
-	job, err := useCase.CreateJob("title", "description", "company", nil, true, 1000)
+	input := &dto.CreateJobInputDTO{
+		Title:       "title",
+		Description: "description",
+		Company:     "company",
+		Remote:      true,
+		Salary:      1000,
+	}
+
+	job, err := useCase.CreateJob(input)
 	assert.Nil(t, err)
+	assert.NotNil(t, job.ID)
 	assert.Equal(t, "title", job.Title)
 	assert.Equal(t, "description", job.Description)
 	assert.Equal(t, "company", job.Company)
 	assert.Nil(t, job.Location)
 	assert.True(t, job.Remote)
 	assert.Equal(t, int64(1000), job.Salary)
-	repo.AssertCalled(t, "Create", job)
+	assert.NotNil(t, job.CreatedAt)
+	assert.NotNil(t, job.UpdatedAt)
+	repo.AssertCalled(t, "Create", mock.AnythingOfType("*entity.Job"))
 }
 
 func TestFindJobByID(t *testing.T) {
@@ -35,7 +47,14 @@ func TestFindJobByID(t *testing.T) {
 
 	result, err := useCase.FindJobByID(job.ID.String())
 	assert.Nil(t, err)
-	assert.Equal(t, job, result)
+	assert.NotNil(t, job.ID)
+	assert.Equal(t, result.Company, job.Company)
+	assert.Equal(t, result.Description, job.Description)
+	assert.Equal(t, result.Title, job.Title)
+	assert.Equal(t, result.Remote, job.Remote)
+	assert.Equal(t, result.Salary, job.Salary)
+	assert.NotNil(t, job.CreatedAt)
+	assert.NotNil(t, job.UpdatedAt)
 	repo.AssertCalled(t, "FindByID", job.ID)
 }
 
@@ -44,12 +63,20 @@ func TestFindAllJobs(t *testing.T) {
 	useCase := NewJobUseCase(repo)
 
 	job := entity.NewJob("title", "description", "company", nil, true, 1000)
-	repo.On("FindAll", 1, 10, "created_at desc").Return(&[]entity.Job{*job}, nil)
+	repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{*job}, nil)
 
-	result, err := useCase.FindAllJobs(1, 10, "created_at desc")
+	result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")
 	assert.Nil(t, err)
-	assert.Equal(t, &[]entity.Job{*job}, result)
-	repo.AssertCalled(t, "FindAll", 1, 10, "created_at desc")
+	assert.Equal(t, 1, len(result.Jobs))
+	assert.NotNil(t, result.Jobs[0].ID)
+	assert.Equal(t, result.Jobs[0].Company, job.Company)
+	assert.Equal(t, result.Jobs[0].Description, job.Description)
+	assert.Equal(t, result.Jobs[0].Title, job.Title)
+	assert.Equal(t, result.Jobs[0].Remote, job.Remote)
+	assert.Equal(t, result.Jobs[0].Salary, job.Salary)
+	assert.NotNil(t, result.Jobs[0].CreatedAt)
+	assert.NotNil(t, result.Jobs[0].UpdatedAt)
+	repo.AssertCalled(t, "FindAll", 1, 10, "created_at", "desc")
 }
 
 func TestUpdateJob(t *testing.T) {
@@ -58,15 +85,26 @@ func TestUpdateJob(t *testing.T) {
 
 	repo.On("Update", mock.Anything).Return(nil)
 
-	job, err := useCase.UpdateJob(id.NewID().String(), "title", "description", "company", nil, true, int64(1000))
+	input := &dto.UpdateJobInputDTO{
+		Title:       "title",
+		Description: "description",
+		Company:     "company",
+		Remote:      true,
+		Salary:      1000,
+	}
+
+	job, err := useCase.UpdateJob(id.NewID().String(), input)
 	assert.Nil(t, err)
 	repo.AssertCalled(t, "Update", mock.Anything)
+	assert.NotNil(t, job.ID)
 	assert.Equal(t, "title", job.Title)
 	assert.Equal(t, "description", job.Description)
 	assert.Equal(t, "company", job.Company)
 	assert.Nil(t, job.Location)
 	assert.True(t, job.Remote)
 	assert.Equal(t, int64(1000), job.Salary)
+	assert.NotNil(t, job.CreatedAt)
+	assert.NotNil(t, job.UpdatedAt)
 }
 
 func TestDeleteJob(t *testing.T) {
@@ -93,8 +131,8 @@ func (m *mockJobRepository) FindByID(id id.ID) (*entity.Job, error) {
 	return args.Get(0).(*entity.Job), args.Error(1)
 }
 
-func (m *mockJobRepository) FindAll(page, limit int, sort string) (*[]entity.Job, error) {
-	args := m.Called(page, limit, sort)
+func (m *mockJobRepository) FindAll(page, limit int, sortField, sortDir string) (*[]entity.Job, error) {
+	args := m.Called(page, limit, sortField, sortDir)
 	return args.Get(0).(*[]entity.Job), args.Error(1)
 }
 
