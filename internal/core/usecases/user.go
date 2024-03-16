@@ -68,11 +68,10 @@ func (u *UserUseCase) UpdateUser(idStr string, input *dto.UpdateUserInputDTO) (*
 	}, nil
 }
 
-func (u *UserUseCase) DeleteUser(idStr string) error {
-	id, err := id.StringToID(idStr)
+func (u *UserUseCase) DeleteUser(email string) error {
+	user, err := u.repository.FindByEmail(email)
 	if err != nil {
 		return err
 	}
-
-	return u.repository.Delete(id)
+	return u.repository.Delete(user.ID)
 }

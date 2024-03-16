@@ -3,6 +3,7 @@ package usecases
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/pkg/id"
@@ -74,9 +75,11 @@ func TestDeleteUser(t *testing.T) {
 	repo := &mockUserRepository{}
 	useCase := NewUserUseCase(repo)
 
-	repo.On("Delete", mock.Anything).Return(nil)
+	user := &entity.User{}
+	repo.On("FindByEmail", "test@email.com").Return(user, nil)
+	repo.On("Delete", mock.AnythingOfType("uuid.UUID")).Return(nil)
 
-	err := useCase.DeleteUser(id.NewID().String())
+	err := useCase.DeleteUser("test@email.com")
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -103,7 +106,7 @@ func (m *mockUserRepository) Update(user *entity.User) error {
 	return args.Error(0)
 }
 
-func (m *mockUserRepository) Delete(id id.ID) error {
+func (m *mockUserRepository) Delete(id uuid.UUID) error {
 	args := m.Called(id)
 	return args.Error(0)
 }

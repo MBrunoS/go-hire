@@ -67,9 +67,9 @@ func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+	email := r.PathValue("email")
 
-	err := h.userUseCase.DeleteUser(id)
+	err := h.userUseCase.DeleteUser(email)
 
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err)
