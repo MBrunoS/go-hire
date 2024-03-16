@@ -67,7 +67,7 @@ func (u *JobUseCase) FindAllJobs(page, limit int, sortField, sortDir string) (*d
 		return nil, err
 	}
 
-	var jobsOutput []dto.JobOutputDTO
+	jobsOutput := []dto.JobOutputDTO{}
 
 	for _, job := range *jobs {
 		jobsOutput = append(jobsOutput, dto.JobOutputDTO{

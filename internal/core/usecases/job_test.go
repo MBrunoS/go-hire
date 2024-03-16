@@ -59,24 +59,40 @@ func TestFindJobByID(t *testing.T) {
 }
 
 func TestFindAllJobs(t *testing.T) {
-	repo := &mockJobRepository{}
-	useCase := NewJobUseCase(repo)
+	t.Run("should return empty list", func(t *testing.T) {
+		repo := &mockJobRepository{}
+		useCase := NewJobUseCase(repo)
 
-	job := entity.NewJob("title", "description", "company", nil, true, 1000)
-	repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{*job}, nil)
+		repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{}, nil)
 
-	result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")
-	assert.Nil(t, err)
-	assert.Equal(t, 1, len(result.Jobs))
-	assert.NotNil(t, result.Jobs[0].ID)
-	assert.Equal(t, result.Jobs[0].Company, job.Company)
-	assert.Equal(t, result.Jobs[0].Description, job.Description)
-	assert.Equal(t, result.Jobs[0].Title, job.Title)
-	assert.Equal(t, result.Jobs[0].Remote, job.Remote)
-	assert.Equal(t, result.Jobs[0].Salary, job.Salary)
-	assert.NotNil(t, result.Jobs[0].CreatedAt)
-	assert.NotNil(t, result.Jobs[0].UpdatedAt)
-	repo.AssertCalled(t, "FindAll", 1, 10, "created_at", "desc")
+		result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")
+		assert.Nil(t, err)
+		assert.NotNil(t, result.Jobs)
+		assert.Equal(t, 0, len(result.Jobs))
+		repo.AssertCalled(t, "FindAll", 1, 10, "created_at", "desc")
+	})
+
+	t.Run("should return list with one job", func(t *testing.T) {
+		repo := &mockJobRepository{}
+		useCase := NewJobUseCase(repo)
+
+		job := entity.NewJob("title", "description", "company", nil, true, 1000)
+		repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{*job}, nil)
+
+		result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")
+		assert.Nil(t, err)
+		assert.Equal(t, 1, len(result.Jobs))
+		assert.NotNil(t, result.Jobs[0].ID)
+		assert.Equal(t, result.Jobs[0].Company, job.Company)
+		assert.Equal(t, result.Jobs[0].Description, job.Description)
+		assert.Equal(t, result.Jobs[0].Title, job.Title)
+		assert.Equal(t, result.Jobs[0].Remote, job.Remote)
+		assert.Equal(t, result.Jobs[0].Salary, job.Salary)
+		assert.NotNil(t, result.Jobs[0].CreatedAt)
+		assert.NotNil(t, result.Jobs[0].UpdatedAt)
+		repo.AssertCalled(t, "FindAll", 1, 10, "created_at", "desc")
+	})
+
 }
 
 func TestUpdateJob(t *testing.T) {
