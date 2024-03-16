@@ -12,7 +12,7 @@ type Server struct {
 	Port     string
 }
 
-func NewServer(host, port string) *Server {
+func NewServer(port string) *Server {
 	return &Server{
 		Router:   router.NewDefaultRouter(),
 		Handlers: make(map[string]http.HandlerFunc),

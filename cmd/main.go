@@ -3,13 +3,15 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/mbrunos/go-hire/config"
-	"github.com/mbrunos/go-hire/router"
+	"github.com/mbrunos/go-hire/internal/core/usecases"
+	"github.com/mbrunos/go-hire/internal/infra/database/repository"
+	"github.com/mbrunos/go-hire/internal/infra/http/handler"
+	"github.com/mbrunos/go-hire/internal/infra/http/routes"
+	"github.com/mbrunos/go-hire/internal/infra/http/server"
 )
 
-var logger *config.Logger
-
 func main() {
-	logger = config.GetLogger()
+	logger := config.GetLogger()
 
 	err := godotenv.Load()
 
@@ -24,5 +26,23 @@ func main() {
 		return
 	}
 
-	router.Setup()
+	db := config.GetDB()
+
+	jobRepo := repository.NewJobRepository(db)
+	jobUseCase := usecases.NewJobUseCase(jobRepo)
+	jobHandler := handler.NewJobHandler(jobUseCase)
+
+	userRepo := repository.NewUserRepository(db)
+	userUseCase := usecases.NewUserUseCase(userRepo)
+	userHandler := handler.NewUserHandler(userUseCase)
+
+	s := server.NewServer(config.ServerPort)
+	routes.AddUserRoutes(s.Router, userHandler)
+	routes.AddJobRoutes(s.Router, jobHandler)
+	routes.AddSwaggerRoutes(s.Router)
+
+	if err := s.Start(); err != nil {
+		logger.ErrorF("Error starting server: %s", err)
+		return
+	}
 }

@@ -1,12 +1,15 @@
 package config
 
 import (
+	"os"
+
 	"gorm.io/gorm"
 )
 
 var (
-	db     *gorm.DB
-	logger *Logger
+	db         *gorm.DB
+	logger     *Logger
+	ServerPort string
 )
 
 func Init() error {
@@ -16,6 +19,8 @@ func Init() error {
 	if err != nil {
 		return err
 	}
+
+	ServerPort = os.Getenv("SERVER_PORT")
 
 	return nil
 }
