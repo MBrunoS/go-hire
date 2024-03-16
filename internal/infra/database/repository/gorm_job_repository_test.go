@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/mbrunos/go-hire/internal/core/entity"
-	"github.com/mbrunos/go-hire/internal/infra/database/model"
 	"github.com/mbrunos/go-hire/internal/infra/database/repository"
+	"github.com/mbrunos/go-hire/internal/infra/database/schema"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -112,7 +112,7 @@ func setupJobRepo() (*repository.JobRepository, *entity.Job, *gorm.DB) {
 		panic(err)
 	}
 
-	db.AutoMigrate(&model.Job{})
+	db.AutoMigrate(&schema.Job{})
 
 	job := entity.NewJob("Senior Golang Developer", "We want top golang developers", "Google", nil, false, 100000)
 	repo := repository.NewJobRepository(db)

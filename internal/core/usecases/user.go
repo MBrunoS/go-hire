@@ -1,6 +1,7 @@
 package usecases
 
 import (
+	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/internal/core/entity/interfaces"
 	"github.com/mbrunos/go-hire/pkg/id"
@@ -14,8 +15,8 @@ func NewUserUseCase(userRepository interfaces.UserRepository) *UserUseCase {
 	return &UserUseCase{repository: userRepository}
 }
 
-func (u *UserUseCase) CreateUser(name, email, password string) (*entity.User, error) {
-	user, err := entity.NewUser(name, email, password)
+func (u *UserUseCase) CreateUser(input dto.CreateUserInputDTO) (*dto.UserOutputDTO, error) {
+	user, err := entity.NewUser(input.Name, input.Email, input.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -24,20 +25,33 @@ func (u *UserUseCase) CreateUser(name, email, password string) (*entity.User, er
 		return nil, err
 	}
 
-	return user, nil
+	return &dto.UserOutputDTO{
+		ID:    user.ID.String(),
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
 }
 
-func (u *UserUseCase) FindUserByEmail(email string) (*entity.User, error) {
-	return u.repository.FindByEmail(email)
+func (u *UserUseCase) FindUserByEmail(email string) (*dto.UserOutputDTO, error) {
+	user, err := u.repository.FindByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.UserOutputDTO{
+		ID:    user.ID.String(),
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
 }
 
-func (u *UserUseCase) UpdateUser(idStr, name, email, password string) (*entity.User, error) {
+func (u *UserUseCase) UpdateUser(idStr string, input dto.UpdateUserInputDTO) (*dto.UserOutputDTO, error) {
 	id, err := id.StringToID(idStr)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := entity.NewUser(name, email, password)
+	user, err := entity.NewUser(input.Name, input.Email, input.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +61,11 @@ func (u *UserUseCase) UpdateUser(idStr, name, email, password string) (*entity.U
 		return nil, err
 	}
 
-	return user, nil
+	return &dto.UserOutputDTO{
+		ID:    user.ID.String(),
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
 }
 
 func (u *UserUseCase) DeleteUser(idStr string) error {

@@ -1,8 +1,9 @@
 package usecases
 
 import (
+	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
-	"github.com/mbrunos/go-hire/internal/core/repository"
+	"github.com/mbrunos/go-hire/internal/core/entity/interfaces"
 	"github.com/mbrunos/go-hire/pkg/id"
 )
 
@@ -14,40 +15,95 @@ func NewJobUseCase(jobRepository interfaces.JobRepository) *JobUseCase {
 	return &JobUseCase{repository: jobRepository}
 }
 
-func (u *JobUseCase) CreateJob(title, description, company string, location *string, remote bool, salary int64) (*entity.Job, error) {
-	job := entity.NewJob(title, description, company, location, remote, salary)
+func (u *JobUseCase) CreateJob(input dto.CreateJobInputDTO) (*dto.JobOutputDTO, error) {
+	job := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+
 	if err := u.repository.Create(job); err != nil {
 		return nil, err
 	}
-	return job, nil
+
+	return &dto.JobOutputDTO{
+		ID:          job.ID.String(),
+		Title:       job.Title,
+		Description: job.Description,
+		Company:     job.Company,
+		Location:    job.Location,
+		Remote:      job.Remote,
+		Salary:      job.Salary,
+	}, nil
 }
 
-func (u *JobUseCase) FindJobByID(idStr string) (*entity.Job, error) {
+func (u *JobUseCase) FindJobByID(idStr string) (*dto.JobOutputDTO, error) {
 	id, err := id.StringToID(idStr)
 	if err != nil {
 		return nil, err
 	}
-	return u.repository.FindByID(id)
+
+	job, err := u.repository.FindByID(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.JobOutputDTO{
+		ID:          job.ID.String(),
+		Title:       job.Title,
+		Description: job.Description,
+		Company:     job.Company,
+		Location:    job.Location,
+		Remote:      job.Remote,
+		Salary:      job.Salary,
+	}, nil
 }
 
-func (u *JobUseCase) FindAllJobs(page, limit int, sort string) (*[]entity.Job, error) {
-	return u.repository.FindAll(page, limit, sort)
+func (u *JobUseCase) FindAllJobs(page, limit int, sortField, sortDir string) (*dto.JobListOutputDTO, error) {
+	jobs, err := u.repository.FindAll(page, limit, sortField, sortDir)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var jobsOutput []dto.JobOutputDTO
+
+	for _, job := range *jobs {
+		jobsOutput = append(jobsOutput, dto.JobOutputDTO{
+			ID:          job.ID.String(),
+			Title:       job.Title,
+			Description: job.Description,
+			Company:     job.Company,
+			Location:    job.Location,
+			Remote:      job.Remote,
+			Salary:      job.Salary,
+		})
+	}
+
+	return &dto.JobListOutputDTO{
+		Jobs: jobsOutput,
+	}, nil
 }
 
-func (u *JobUseCase) UpdateJob(idStr, title, description, company string, location *string, remote bool, salary int64) (*entity.Job, error) {
+func (u *JobUseCase) UpdateJob(idStr string, input dto.UpdateJobInputDTO) (*dto.JobOutputDTO, error) {
 	id, err := id.StringToID(idStr)
 	if err != nil {
 		return nil, err
 	}
 
-	job := entity.NewJob(title, description, company, location, remote, salary)
+	job := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
 	job.ID = id
 
 	if err := u.repository.Update(job); err != nil {
 		return nil, err
 	}
 
-	return job, nil
+	return &dto.JobOutputDTO{
+		ID:          job.ID.String(),
+		Title:       job.Title,
+		Description: job.Description,
+		Company:     job.Company,
+		Location:    job.Location,
+		Remote:      job.Remote,
+		Salary:      job.Salary,
+	}, nil
 }
 
 func (u *JobUseCase) DeleteJob(idStr string) error {

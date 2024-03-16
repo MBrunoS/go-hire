@@ -8,7 +8,7 @@ import (
 type JobRepository interface {
 	Create(job *entity.Job) error
 	FindByID(id id.ID) (*entity.Job, error)
-	FindAll(page, limit int, sort string) (*[]entity.Job, error)
+	FindAll(page, limit int, sortField, sortDir string) (*[]entity.Job, error)
 	Update(job *entity.Job) error
 	Delete(id id.ID) error
 }

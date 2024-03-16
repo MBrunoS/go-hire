@@ -14,7 +14,7 @@ type UpdateJobInputDTO struct {
 	Description string  `json:"description"`
 	Company     string  `json:"company"`
 	Location    *string `json:"location"`
-	Remote      *bool   `json:"remote"`
+	Remote      bool    `json:"remote"`
 	Salary      int64   `json:"salary"`
 }
 
