@@ -15,7 +15,7 @@ func NewJobUseCase(jobRepository interfaces.JobRepository) *JobUseCase {
 	return &JobUseCase{repository: jobRepository}
 }
 
-func (u *JobUseCase) CreateJob(input dto.CreateJobInputDTO) (*dto.JobOutputDTO, error) {
+func (u *JobUseCase) CreateJob(input *dto.CreateJobInputDTO) (*dto.JobOutputDTO, error) {
 	job := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
 
 	if err := u.repository.Create(job); err != nil {
@@ -30,6 +30,8 @@ func (u *JobUseCase) CreateJob(input dto.CreateJobInputDTO) (*dto.JobOutputDTO, 
 		Location:    job.Location,
 		Remote:      job.Remote,
 		Salary:      job.Salary,
+		CreatedAt:   job.CreatedAt.String(),
+		UpdatedAt:   job.UpdatedAt.String(),
 	}, nil
 }
 
@@ -53,6 +55,8 @@ func (u *JobUseCase) FindJobByID(idStr string) (*dto.JobOutputDTO, error) {
 		Location:    job.Location,
 		Remote:      job.Remote,
 		Salary:      job.Salary,
+		CreatedAt:   job.CreatedAt.String(),
+		UpdatedAt:   job.UpdatedAt.String(),
 	}, nil
 }
 
@@ -74,6 +78,8 @@ func (u *JobUseCase) FindAllJobs(page, limit int, sortField, sortDir string) (*d
 			Location:    job.Location,
 			Remote:      job.Remote,
 			Salary:      job.Salary,
+			CreatedAt:   job.CreatedAt.String(),
+			UpdatedAt:   job.UpdatedAt.String(),
 		})
 	}
 
@@ -82,7 +88,7 @@ func (u *JobUseCase) FindAllJobs(page, limit int, sortField, sortDir string) (*d
 	}, nil
 }
 
-func (u *JobUseCase) UpdateJob(idStr string, input dto.UpdateJobInputDTO) (*dto.JobOutputDTO, error) {
+func (u *JobUseCase) UpdateJob(idStr string, input *dto.UpdateJobInputDTO) (*dto.JobOutputDTO, error) {
 	id, err := id.StringToID(idStr)
 	if err != nil {
 		return nil, err
@@ -103,6 +109,8 @@ func (u *JobUseCase) UpdateJob(idStr string, input dto.UpdateJobInputDTO) (*dto.
 		Location:    job.Location,
 		Remote:      job.Remote,
 		Salary:      job.Salary,
+		CreatedAt:   job.CreatedAt.String(),
+		UpdatedAt:   job.UpdatedAt.String(),
 	}, nil
 }
 

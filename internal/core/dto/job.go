@@ -28,7 +28,6 @@ type JobOutputDTO struct {
 	Salary      int64   `json:"salary"`
 	CreatedAt   string  `json:"created_at"`
 	UpdatedAt   string  `json:"updated_at"`
-	DeletedAt   *string `json:"deleted_at,omitempty"`
 }
 
 type JobListOutputDTO struct {

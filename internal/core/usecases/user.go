@@ -15,7 +15,7 @@ func NewUserUseCase(userRepository interfaces.UserRepository) *UserUseCase {
 	return &UserUseCase{repository: userRepository}
 }
 
-func (u *UserUseCase) CreateUser(input dto.CreateUserInputDTO) (*dto.UserOutputDTO, error) {
+func (u *UserUseCase) CreateUser(input *dto.CreateUserInputDTO) (*dto.UserOutputDTO, error) {
 	user, err := entity.NewUser(input.Name, input.Email, input.Password)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func (u *UserUseCase) FindUserByEmail(email string) (*dto.UserOutputDTO, error) 
 	}, nil
 }
 
-func (u *UserUseCase) UpdateUser(idStr string, input dto.UpdateUserInputDTO) (*dto.UserOutputDTO, error) {
+func (u *UserUseCase) UpdateUser(idStr string, input *dto.UpdateUserInputDTO) (*dto.UserOutputDTO, error) {
 	id, err := id.StringToID(idStr)
 	if err != nil {
 		return nil, err

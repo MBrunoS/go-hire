@@ -29,7 +29,7 @@ func (h *JobHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jobUseCase := usecases.NewJobUseCase(h.jobRepository)
-	job, err := jobUseCase.CreateJob(input)
+	job, err := jobUseCase.CreateJob(&input)
 
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, errors.New("error creating job"))
@@ -75,7 +75,7 @@ func (h *JobHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jobUseCase := usecases.NewJobUseCase(h.jobRepository)
-	job, err := jobUseCase.UpdateJob(id, input)
+	job, err := jobUseCase.UpdateJob(id, &input)
 
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err)
