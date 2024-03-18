@@ -16,11 +16,12 @@ func TestCreateJob(t *testing.T) {
 
 	repo.On("Create", mock.AnythingOfType("*entity.Job")).Return(nil)
 
+	r := true
 	input := &dto.CreateJobInputDTO{
 		Title:       "title",
 		Description: "description",
 		Company:     "company",
-		Remote:      true,
+		Remote:      &r,
 		Salary:      1000,
 	}
 
@@ -42,7 +43,8 @@ func TestFindJobByID(t *testing.T) {
 	repo := &mockJobRepository{}
 	useCase := NewJobUseCase(repo)
 
-	job, _ := entity.NewJob("title", "description", "company", nil, true, 1000)
+	r := true
+	job, _ := entity.NewJob("title", "description", "company", nil, &r, 1000)
 	repo.On("FindByID", job.ID).Return(job, nil)
 
 	result, err := useCase.FindJobByID(job.ID.String())
@@ -51,7 +53,7 @@ func TestFindJobByID(t *testing.T) {
 	assert.Equal(t, result.Company, job.Company)
 	assert.Equal(t, result.Description, job.Description)
 	assert.Equal(t, result.Title, job.Title)
-	assert.Equal(t, result.Remote, job.Remote)
+	assert.Equal(t, result.Remote, *job.Remote)
 	assert.Equal(t, result.Salary, job.Salary)
 	assert.NotNil(t, job.CreatedAt)
 	assert.NotNil(t, job.UpdatedAt)
@@ -76,7 +78,8 @@ func TestFindAllJobs(t *testing.T) {
 		repo := &mockJobRepository{}
 		useCase := NewJobUseCase(repo)
 
-		job, _ := entity.NewJob("title", "description", "company", nil, true, 1000)
+		r := true
+		job, _ := entity.NewJob("title", "description", "company", nil, &r, 1000)
 		repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{*job}, nil)
 
 		result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")
@@ -86,7 +89,7 @@ func TestFindAllJobs(t *testing.T) {
 		assert.Equal(t, result.Jobs[0].Company, job.Company)
 		assert.Equal(t, result.Jobs[0].Description, job.Description)
 		assert.Equal(t, result.Jobs[0].Title, job.Title)
-		assert.Equal(t, result.Jobs[0].Remote, job.Remote)
+		assert.Equal(t, result.Jobs[0].Remote, *job.Remote)
 		assert.Equal(t, result.Jobs[0].Salary, job.Salary)
 		assert.NotNil(t, result.Jobs[0].CreatedAt)
 		assert.NotNil(t, result.Jobs[0].UpdatedAt)
@@ -99,13 +102,15 @@ func TestUpdateJob(t *testing.T) {
 	repo := &mockJobRepository{}
 	useCase := NewJobUseCase(repo)
 
-	repo.On("Update", mock.Anything).Return(nil)
+	repo.On("Update", mock.AnythingOfType("*entity.Job")).Return(nil)
+	repo.On("FindByID", mock.AnythingOfType("uuid.UUID")).Return(&entity.Job{}, nil)
 
+	r := true
 	input := &dto.UpdateJobInputDTO{
 		Title:       "title",
 		Description: "description",
 		Company:     "company",
-		Remote:      true,
+		Remote:      &r,
 		Salary:      1000,
 	}
 

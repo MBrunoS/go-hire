@@ -56,7 +56,8 @@ func TestFindAllJobs(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Len(t, *jobs, 1)
 
-	job2, _ := entity.NewJob("Senior Golang Developer", "We want top golang developers", "Google", nil, false, 100000)
+	remote := true
+	job2, _ := entity.NewJob("Senior Golang Developer", "We want top golang developers", "Google", nil, &remote, 100000)
 	err = repo.Create(job2)
 	assert.Nil(t, err)
 
@@ -69,13 +70,14 @@ func TestUpdateJob(t *testing.T) {
 	repo, job, db := setupJobRepo()
 
 	err := repo.Create(job)
+	remote := true
 	assert.Nil(t, err)
 
 	job.Title = "New Title"
 	job.Description = "New Description"
 	job.Company = "New Company"
 	job.Salary = 200000
-	job.Remote = true
+	job.Remote = &remote
 
 	err = repo.Update(job)
 	assert.Nil(t, err)
@@ -114,7 +116,8 @@ func setupJobRepo() (*repository.JobRepository, *entity.Job, *gorm.DB) {
 
 	db.AutoMigrate(&schema.Job{})
 
-	job, _ := entity.NewJob("Senior Golang Developer", "We want top golang developers", "Google", nil, false, 100000)
+	remote := true
+	job, _ := entity.NewJob("Senior Golang Developer", "We want top golang developers", "Google", nil, &remote, 100000)
 	repo := repository.NewJobRepository(db)
 
 	return repo, job, db

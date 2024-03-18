@@ -13,14 +13,15 @@ type Job struct {
 	Description string     `json:"description"`
 	Company     string     `json:"company"`
 	Location    *string    `json:"location"`
-	Remote      bool       `json:"remote"`
+	Remote      *bool      `json:"remote"`
 	Salary      int64      `json:"salary"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
-func NewJob(title, description, company string, location *string, remote bool, salary int64) (*Job, error) {
+func NewJob(title, description, company string, location *string, remote *bool, salary int64) (*Job, error) {
+	now := time.Now()
 	j := &Job{
 		ID:          id.NewID(),
 		Title:       title,
@@ -29,8 +30,8 @@ func NewJob(title, description, company string, location *string, remote bool, s
 		Location:    location,
 		Remote:      remote,
 		Salary:      salary,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
+		CreatedAt:   now,
+		UpdatedAt:   now,
 	}
 
 	if err := j.Validate(); err != nil {
@@ -59,6 +60,10 @@ func (j *Job) Validate() error {
 
 	if j.Company == "" {
 		return errors.New("company is required")
+	}
+
+	if j.Remote == nil {
+		return errors.New("remote is required")
 	}
 
 	if j.Salary <= 0 {

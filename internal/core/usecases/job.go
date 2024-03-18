@@ -1,6 +1,8 @@
 package usecases
 
 import (
+	"time"
+
 	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/entity"
 	"github.com/mbrunos/go-hire/internal/core/entity/interfaces"
@@ -31,7 +33,7 @@ func (u *JobUseCase) CreateJob(input *dto.CreateJobInputDTO) (*dto.JobOutputDTO,
 		Description: job.Description,
 		Company:     job.Company,
 		Location:    job.Location,
-		Remote:      job.Remote,
+		Remote:      *job.Remote,
 		Salary:      job.Salary,
 		CreatedAt:   job.CreatedAt.String(),
 		UpdatedAt:   job.UpdatedAt.String(),
@@ -56,7 +58,7 @@ func (u *JobUseCase) FindJobByID(idStr string) (*dto.JobOutputDTO, error) {
 		Description: job.Description,
 		Company:     job.Company,
 		Location:    job.Location,
-		Remote:      job.Remote,
+		Remote:      *job.Remote,
 		Salary:      job.Salary,
 		CreatedAt:   job.CreatedAt.String(),
 		UpdatedAt:   job.UpdatedAt.String(),
@@ -79,7 +81,7 @@ func (u *JobUseCase) FindAllJobs(page, limit int, sortField, sortDir string) (*d
 			Description: job.Description,
 			Company:     job.Company,
 			Location:    job.Location,
-			Remote:      job.Remote,
+			Remote:      *job.Remote,
 			Salary:      job.Salary,
 			CreatedAt:   job.CreatedAt.String(),
 			UpdatedAt:   job.UpdatedAt.String(),
@@ -97,12 +99,31 @@ func (u *JobUseCase) UpdateJob(idStr string, input *dto.UpdateJobInputDTO) (*dto
 		return nil, err
 	}
 
-	job, err := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+	job, err := u.repository.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	job.ID = id
+	if input.Title != "" {
+		job.Title = input.Title
+	}
+	if input.Description != "" {
+		job.Description = input.Description
+	}
+	if input.Company != "" {
+		job.Company = input.Company
+	}
+	if input.Location != nil {
+		job.Location = input.Location
+	}
+	if input.Remote != nil {
+		job.Remote = input.Remote
+	}
+	if input.Salary != 0 {
+		job.Salary = input.Salary
+	}
+
+	job.UpdatedAt = time.Now()
 
 	if err = u.repository.Update(job); err != nil {
 		return nil, err
@@ -114,7 +135,7 @@ func (u *JobUseCase) UpdateJob(idStr string, input *dto.UpdateJobInputDTO) (*dto
 		Description: job.Description,
 		Company:     job.Company,
 		Location:    job.Location,
-		Remote:      job.Remote,
+		Remote:      *job.Remote,
 		Salary:      job.Salary,
 		CreatedAt:   job.CreatedAt.String(),
 		UpdatedAt:   job.UpdatedAt.String(),
