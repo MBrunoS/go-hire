@@ -10,6 +10,5 @@ type Router interface {
 	PUT(path string, handler http.HandlerFunc)
 	DELETE(path string, handler http.HandlerFunc)
 	Serve(port string) error
-	GetHandler() http.Handler
 	Handle(route string, handler http.HandlerFunc)
 }

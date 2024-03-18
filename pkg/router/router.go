@@ -37,10 +37,6 @@ func (r *DefaultRouter) Serve(port string) error {
 	return http.ListenAndServe(":"+port, r.mux)
 }
 
-func (r *DefaultRouter) GetHandler() http.Handler {
-	return r.mux
-}
-
 func (r *DefaultRouter) Handle(route string, handler http.HandlerFunc) {
 	r.mux.HandleFunc(route, handler)
 }
