@@ -1,0 +1,12 @@
+### Create user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "User 1",
+  "email": "user1@test.com",
+  "password": "password1"
+}
+
+### Delete user
+DELETE http://localhost:8080/api/users/efa053c2-eb0d-4b84-867c-afe591ef8398

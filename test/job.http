@@ -1,0 +1,34 @@
+### List jobs
+GET http://localhost:8080/api/jobs
+
+### Get job by id
+GET http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
+
+### Create job
+POST http://localhost:8080/api/jobs
+Content-Type: application/json
+
+{
+  "title": "Job 2",
+  "description": "Description 2",
+  "location": "Location 2",
+  "company": "Company 2",
+  "remote": false,
+  "salary": 6000
+}
+
+### Update job
+PUT http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
+Content-Type: application/json
+
+{
+  "title": "Job 2",
+  "description": "Description 2.1",
+  "location": "Location 2",
+  "company": "Company 2",
+  "salary": 6500,
+  "remote": true
+}
+
+### Delete job
+DELETE http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
