@@ -42,7 +42,7 @@ func TestFindJobByID(t *testing.T) {
 	repo := &mockJobRepository{}
 	useCase := NewJobUseCase(repo)
 
-	job := entity.NewJob("title", "description", "company", nil, true, 1000)
+	job, _ := entity.NewJob("title", "description", "company", nil, true, 1000)
 	repo.On("FindByID", job.ID).Return(job, nil)
 
 	result, err := useCase.FindJobByID(job.ID.String())
@@ -76,7 +76,7 @@ func TestFindAllJobs(t *testing.T) {
 		repo := &mockJobRepository{}
 		useCase := NewJobUseCase(repo)
 
-		job := entity.NewJob("title", "description", "company", nil, true, 1000)
+		job, _ := entity.NewJob("title", "description", "company", nil, true, 1000)
 		repo.On("FindAll", 1, 10, "created_at", "desc").Return(&[]entity.Job{*job}, nil)
 
 		result, err := useCase.FindAllJobs(1, 10, "created_at", "desc")

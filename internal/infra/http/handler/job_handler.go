@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -22,7 +23,7 @@ func NewJobHandler(usecase *usecases.JobUseCase) *JobHandler {
 func (h *JobHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var input dto.CreateJobInputDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		sendError(w, http.StatusBadRequest, err)
+		sendError(w, http.StatusBadRequest, errors.New("request body is empty or malformed"))
 		return
 	}
 

@@ -16,9 +16,12 @@ func NewJobUseCase(jobRepository interfaces.JobRepository) *JobUseCase {
 }
 
 func (u *JobUseCase) CreateJob(input *dto.CreateJobInputDTO) (*dto.JobOutputDTO, error) {
-	job := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+	job, err := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+	if err != nil {
+		return nil, err
+	}
 
-	if err := u.repository.Create(job); err != nil {
+	if err = u.repository.Create(job); err != nil {
 		return nil, err
 	}
 
@@ -94,10 +97,14 @@ func (u *JobUseCase) UpdateJob(idStr string, input *dto.UpdateJobInputDTO) (*dto
 		return nil, err
 	}
 
-	job := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+	job, err := entity.NewJob(input.Title, input.Description, input.Company, input.Location, input.Remote, input.Salary)
+	if err != nil {
+		return nil, err
+	}
+
 	job.ID = id
 
-	if err := u.repository.Update(job); err != nil {
+	if err = u.repository.Update(job); err != nil {
 		return nil, err
 	}
 

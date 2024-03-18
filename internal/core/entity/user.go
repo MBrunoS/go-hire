@@ -19,12 +19,18 @@ func NewUser(name, email, password string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &User{
+	u := &User{
 		ID:       id.NewID(),
 		Name:     name,
 		Email:    email,
 		Password: string(hash),
-	}, nil
+	}
+
+	if err := u.Validate(); err != nil {
+		return nil, err
+	}
+
+	return u, nil
 }
 
 // Validates the user struct

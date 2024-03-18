@@ -20,8 +20,8 @@ type Job struct {
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
-func NewJob(title, description, company string, location *string, remote bool, salary int64) *Job {
-	return &Job{
+func NewJob(title, description, company string, location *string, remote bool, salary int64) (*Job, error) {
+	j := &Job{
 		ID:          id.NewID(),
 		Title:       title,
 		Description: description,
@@ -32,6 +32,12 @@ func NewJob(title, description, company string, location *string, remote bool, s
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
+
+	if err := j.Validate(); err != nil {
+		return nil, err
+	}
+
+	return j, nil
 }
 
 func (j *Job) Validate() error {
