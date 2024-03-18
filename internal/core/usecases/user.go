@@ -32,6 +32,24 @@ func (u *UserUseCase) CreateUser(input *dto.CreateUserInputDTO) (*dto.UserOutput
 	}, nil
 }
 
+func (u *UserUseCase) FindUserByID(idStr string) (*dto.UserOutputDTO, error) {
+	id, err := id.StringToID(idStr)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := u.repository.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.UserOutputDTO{
+		ID:    user.ID.String(),
+		Name:  user.Name,
+		Email: user.Email,
+	}, nil
+}
+
 func (u *UserUseCase) FindUserByEmail(email string) (*dto.UserOutputDTO, error) {
 	user, err := u.repository.FindByEmail(email)
 	if err != nil {
