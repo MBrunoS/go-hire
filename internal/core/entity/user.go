@@ -44,7 +44,7 @@ func (u *User) Validate() error {
 	}
 
 	if u.Name == "" {
-		return errors.New("username is required")
+		return errors.New("name is required")
 	}
 
 	if u.Email == "" {

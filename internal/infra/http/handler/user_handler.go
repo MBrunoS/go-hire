@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/mbrunos/go-hire/internal/core/dto"
@@ -35,19 +36,6 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	sendSuccess(w, http.StatusCreated, user)
 }
 
-func (h *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
-	email := r.PathValue("email")
-
-	user, err := h.userUseCase.FindUserByEmail(email)
-
-	if err != nil {
-		sendError(w, http.StatusNotFound, err)
-		return
-	}
-
-	sendSuccess(w, http.StatusOK, user)
-}
-
 func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var input dto.UpdateUserInputDTO
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -67,11 +55,16 @@ func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	email := r.PathValue("email")
+	id := r.PathValue("id")
 
-	err := h.userUseCase.DeleteUser(email)
+	_, err := h.userUseCase.FindUserByID(id)
 
 	if err != nil {
+		sendError(w, http.StatusNotFound, fmt.Errorf("user with id %s not found", id))
+		return
+	}
+
+	if err := h.userUseCase.DeleteUser(id); err != nil {
 		sendError(w, http.StatusInternalServerError, err)
 		return
 	}

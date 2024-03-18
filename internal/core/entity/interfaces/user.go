@@ -7,6 +7,7 @@ import (
 
 type UserRepository interface {
 	Create(user *entity.User) error
+	FindByID(id id.ID) (*entity.User, error)
 	FindByEmail(email string) (*entity.User, error)
 	Update(user *entity.User) error
 	Delete(id id.ID) error

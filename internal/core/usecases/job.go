@@ -147,5 +147,6 @@ func (u *JobUseCase) DeleteJob(idStr string) error {
 	if err != nil {
 		return err
 	}
+
 	return u.repository.Delete(id)
 }

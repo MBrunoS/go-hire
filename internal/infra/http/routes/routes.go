@@ -10,9 +10,8 @@ import (
 
 func AddUserRoutes(r router.Router, userHandler *handler.UserHandler) {
 	r.POST("/api/users", userHandler.Create)
-	r.GET("/api/users/{email}", userHandler.Get)
 	r.PUT("/api/users/{id}", userHandler.Update)
-	r.DELETE("/api/users/{email}", userHandler.Delete)
+	r.DELETE("/api/users/{id}", userHandler.Delete)
 }
 
 func AddJobRoutes(r router.Router, jobHandler *handler.JobHandler) {

@@ -76,10 +76,10 @@ func TestDeleteUser(t *testing.T) {
 	useCase := NewUserUseCase(repo)
 
 	user := &entity.User{}
-	repo.On("FindByEmail", "test@email.com").Return(user, nil)
+	repo.On("FindByID", mock.AnythingOfType("uuid.UUID")).Return(user, nil)
 	repo.On("Delete", mock.AnythingOfType("uuid.UUID")).Return(nil)
 
-	err := useCase.DeleteUser("test@email.com")
+	err := useCase.DeleteUser(id.NewID().String())
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
@@ -94,6 +94,11 @@ type mockUserRepository struct {
 func (m *mockUserRepository) Create(user *entity.User) error {
 	args := m.Called(user)
 	return args.Error(0)
+}
+
+func (m *mockUserRepository) FindByID(id uuid.UUID) (*entity.User, error) {
+	args := m.Called(id)
+	return args.Get(0).(*entity.User), args.Error(1)
 }
 
 func (m *mockUserRepository) FindByEmail(email string) (*entity.User, error) {
