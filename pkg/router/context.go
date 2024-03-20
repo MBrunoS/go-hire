@@ -17,7 +17,7 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	}
 }
 
-func (c *Context) URLParam(key string) string {
+func (c *Context) PathParam(key string) string {
 	return c.Request.PathValue(key)
 }
 

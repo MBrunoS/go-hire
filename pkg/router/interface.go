@@ -8,6 +8,7 @@ type Router interface {
 	Group(prefix string, middlewares ...Middleware) *RouteGroup
 	Serve(port string) error
 	Use(middleware Middleware)
+	applyMiddlewares(handler HandlerFunc) HandlerFunc
 }
 
 type HandlerFunc func(c *Context)

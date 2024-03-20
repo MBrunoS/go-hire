@@ -37,7 +37,7 @@ func (h *JobHandler) Create(c *router.Context) {
 }
 
 func (h *JobHandler) Get(c *router.Context) {
-	id := c.URLParam("id")
+	id := c.PathParam("id")
 
 	job, err := h.jobUseCase.FindJobByID(id)
 
@@ -61,7 +61,7 @@ func (h *JobHandler) List(c *router.Context) {
 }
 
 func (h *JobHandler) Update(c *router.Context) {
-	id := c.URLParam("id")
+	id := c.PathParam("id")
 
 	var input dto.UpdateJobInputDTO
 	if err := c.BindJSON(input); err != nil {
@@ -80,7 +80,7 @@ func (h *JobHandler) Update(c *router.Context) {
 }
 
 func (h *JobHandler) Delete(c *router.Context) {
-	id := c.URLParam("id")
+	id := c.PathParam("id")
 
 	_, err := h.jobUseCase.FindJobByID(id)
 

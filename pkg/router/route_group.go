@@ -6,6 +6,14 @@ type RouteGroup struct {
 	prefix      string
 }
 
+func NewRouteGroup(r *DefaultRouter, prefix string, middlewares ...Middleware) *RouteGroup {
+	return &RouteGroup{
+		middlewares: middlewares,
+		router:      r,
+		prefix:      prefix,
+	}
+}
+
 func (rg *RouteGroup) GET(path string, handler HandlerFunc) {
 	rg.router.GET(rg.prefix+path, rg.applyMiddlewares(handler))
 }

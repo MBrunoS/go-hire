@@ -61,11 +61,7 @@ func (r *DefaultRouter) DELETE(path string, handler HandlerFunc) {
 }
 
 func (r *DefaultRouter) Group(prefix string, middlewares ...Middleware) *RouteGroup {
-	return &RouteGroup{
-		middlewares: append(r.middlewares, middlewares...),
-		router:      r,
-		prefix:      prefix,
-	}
+	return NewRouteGroup(r, prefix, middlewares...)
 }
 
 func (r *DefaultRouter) Serve(port string) error {

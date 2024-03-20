@@ -44,7 +44,7 @@ func (h *UserHandler) Update(c *router.Context) {
 		return
 	}
 
-	id := c.URLParam("id")
+	id := c.PathParam("id")
 	user, err := h.userUseCase.UpdateUser(id, &input)
 
 	if err != nil {
@@ -56,7 +56,7 @@ func (h *UserHandler) Update(c *router.Context) {
 }
 
 func (h *UserHandler) Delete(c *router.Context) {
-	id := c.URLParam("id")
+	id := c.PathParam("id")
 
 	_, err := h.userUseCase.FindUserByID(id)
 
