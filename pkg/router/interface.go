@@ -1,14 +1,15 @@
 package router
 
-import (
-	"net/http"
-)
-
 type Router interface {
-	GET(path string, handler http.HandlerFunc)
-	POST(path string, handler http.HandlerFunc)
-	PUT(path string, handler http.HandlerFunc)
-	DELETE(path string, handler http.HandlerFunc)
+	GET(path string, handler HandlerFunc)
+	POST(path string, handler HandlerFunc)
+	PUT(path string, handler HandlerFunc)
+	DELETE(path string, handler HandlerFunc)
+	Group(prefix string, middlewares ...Middleware) *RouteGroup
 	Serve(port string) error
-	Handle(route string, handler http.HandlerFunc)
+	Use(middleware Middleware)
 }
+
+type HandlerFunc func(c *Context)
+
+type Middleware func(HandlerFunc) HandlerFunc
