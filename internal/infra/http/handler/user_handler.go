@@ -1,16 +1,17 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/usecases"
+	"github.com/mbrunos/go-hire/pkg/router"
 )
 
 type UserHandler struct {
 	userUseCase *usecases.UserUseCase
+	JwtAuth     router.Middleware
 }
 
 func NewUserHandler(usecase *usecases.UserUseCase) *UserHandler {
@@ -19,55 +20,55 @@ func NewUserHandler(usecase *usecases.UserUseCase) *UserHandler {
 	}
 }
 
-func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Create(c *router.Context) {
 	var input dto.CreateUserInputDTO
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		sendError(w, http.StatusBadRequest, err)
+	if err := c.BindJSON(&input); err != nil {
+		c.SendError(http.StatusBadRequest, err)
 		return
 	}
 
 	user, err := h.userUseCase.CreateUser(&input)
 
 	if err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
 
-	sendSuccess(w, http.StatusCreated, user)
+	c.SendJSON(http.StatusCreated, user)
 }
 
-func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) Update(c *router.Context) {
 	var input dto.UpdateUserInputDTO
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		sendError(w, http.StatusBadRequest, err)
+	if err := c.BindJSON(&input); err != nil {
+		c.SendError(http.StatusBadRequest, err)
 		return
 	}
 
-	id := r.PathValue("id")
+	id := c.URLParam("id")
 	user, err := h.userUseCase.UpdateUser(id, &input)
 
 	if err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
 
-	sendSuccess(w, http.StatusOK, user)
+	c.SendJSON(http.StatusOK, user)
 }
 
-func (h *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+func (h *UserHandler) Delete(c *router.Context) {
+	id := c.URLParam("id")
 
 	_, err := h.userUseCase.FindUserByID(id)
 
 	if err != nil {
-		sendError(w, http.StatusNotFound, fmt.Errorf("user with id %s not found", id))
+		c.SendError(http.StatusNotFound, fmt.Errorf("user with id %s not found", id))
 		return
 	}
 
 	if err := h.userUseCase.DeleteUser(id); err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
 
-	sendSuccess(w, http.StatusNoContent, nil)
+	c.SendJSON(http.StatusNoContent, nil)
 }

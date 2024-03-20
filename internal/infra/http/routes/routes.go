@@ -23,7 +23,9 @@ func AddJobRoutes(r router.Router, jobHandler *handler.JobHandler) {
 }
 
 func AddSwaggerRoutes(r router.Router) {
-	r.GET("/swagger/{any...}", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
-	))
+	r.GET("/swagger/{any...}", func(c *router.Context) {
+		httpSwagger.Handler(
+			httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
+		).ServeHTTP(c.Writer, c.Request)
+	})
 }

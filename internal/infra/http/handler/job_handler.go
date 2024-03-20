@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/usecases"
+	"github.com/mbrunos/go-hire/pkg/router"
 )
 
 type JobHandler struct {
@@ -20,80 +20,79 @@ func NewJobHandler(usecase *usecases.JobUseCase) *JobHandler {
 	}
 }
 
-func (h *JobHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (h *JobHandler) Create(c *router.Context) {
 	var input dto.CreateJobInputDTO
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		sendError(w, http.StatusBadRequest, errors.New("request body is empty or malformed"))
+	if err := c.BindJSON(input); err != nil {
+		c.SendError(http.StatusBadRequest, errors.New("request body is empty or malformed"))
 		return
 	}
 
 	job, err := h.jobUseCase.CreateJob(&input)
 
 	if err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
-
-	sendSuccess(w, http.StatusCreated, job)
+	c.SendJSON(http.StatusCreated, job)
 }
 
-func (h *JobHandler) Get(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+func (h *JobHandler) Get(c *router.Context) {
+	id := c.URLParam("id")
 
 	job, err := h.jobUseCase.FindJobByID(id)
 
 	if err != nil {
-		sendError(w, http.StatusNotFound, fmt.Errorf("job with id %s not found", id))
+		c.SendError(http.StatusNotFound, fmt.Errorf("job with id %s not found", id))
 		return
 	}
 
-	sendSuccess(w, http.StatusOK, job)
+	c.SendJSON(http.StatusOK, job)
 }
 
-func (h *JobHandler) List(w http.ResponseWriter, r *http.Request) {
+func (h *JobHandler) List(c *router.Context) {
 	jobs, err := h.jobUseCase.FindAllJobs(0, 0, "", "")
 
 	if err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
 
-	sendSuccess(w, http.StatusOK, jobs)
+	c.SendJSON(http.StatusOK, jobs)
 }
 
-func (h *JobHandler) Update(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+func (h *JobHandler) Update(c *router.Context) {
+	id := c.URLParam("id")
 
 	var input dto.UpdateJobInputDTO
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		sendError(w, http.StatusBadRequest, err)
+	if err := c.BindJSON(input); err != nil {
+		c.SendError(http.StatusBadRequest, err)
 		return
 	}
 
 	job, err := h.jobUseCase.UpdateJob(id, &input)
 
 	if err != nil {
-		sendError(w, http.StatusInternalServerError, err)
+		c.SendError(http.StatusInternalServerError, err)
 		return
 	}
 
-	sendSuccess(w, http.StatusOK, job)
+	c.SendJSON(http.StatusOK, job)
 }
 
-func (h *JobHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
+func (h *JobHandler) Delete(c *router.Context) {
+	id := c.URLParam("id")
 
 	_, err := h.jobUseCase.FindJobByID(id)
 
 	if err != nil {
-		sendError(w, http.StatusNotFound, fmt.Errorf("job with id %s not found", id))
+		c.SendError(http.StatusNotFound, fmt.Errorf("job with id %s not found", id))
 		return
 	}
 
 	if err := h.jobUseCase.DeleteJob(id); err != nil {
-		sendError(w, http.StatusInternalServerError, fmt.Errorf("error deleting job with id %s", id))
+		c.SendError(http.StatusInternalServerError, fmt.Errorf("error deleting job with id %s", id))
 		return
 	}
 
-	sendSuccess(w, http.StatusNoContent, nil)
+	c.SendJSON(http.StatusNoContent, nil)
 }
