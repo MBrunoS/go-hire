@@ -10,6 +10,7 @@ var (
 	db         *gorm.DB
 	logger     *Logger
 	ServerPort string
+	JWTSecret  string
 )
 
 func Init() error {
@@ -21,6 +22,7 @@ func Init() error {
 	}
 
 	ServerPort = os.Getenv("SERVER_PORT")
+	JWTSecret = os.Getenv("JWT_SECRET")
 
 	return nil
 }

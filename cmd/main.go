@@ -8,7 +8,7 @@ import (
 	"github.com/mbrunos/go-hire/internal/infra/http/handler"
 	"github.com/mbrunos/go-hire/internal/infra/http/routes"
 	"github.com/mbrunos/go-hire/internal/infra/http/server"
-	"github.com/mbrunos/go-hire/pkg/middleware/requestlogger"
+	"github.com/mbrunos/go-hire/pkg/middleware"
 )
 
 func main() {
@@ -38,10 +38,10 @@ func main() {
 	userHandler := handler.NewUserHandler(userUseCase)
 
 	s := server.NewServer(config.ServerPort)
-	s.Router.Use(requestlogger.Logger)
+	s.Router.Use(middleware.Logger)
 
-	routes.AddUserRoutes(s.Router, userHandler)
-	routes.AddJobRoutes(s.Router, jobHandler)
+	routes.AddPublicRoutes(s.Router, userHandler, jobHandler)
+	routes.AddPrivateRoutes(s.Router, userHandler, jobHandler)
 	routes.AddSwaggerRoutes(s.Router)
 
 	if err := s.Start(); err != nil {

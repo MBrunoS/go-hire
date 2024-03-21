@@ -1,27 +1,30 @@
 package routes
 
 import (
+	"github.com/mbrunos/go-hire/config"
 	"github.com/mbrunos/go-hire/internal/infra/http/handler"
+	"github.com/mbrunos/go-hire/pkg/middleware"
 	"github.com/mbrunos/go-hire/pkg/router"
 
 	_ "github.com/mbrunos/go-hire/docs"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
-func AddUserRoutes(r router.Router, userHandler *handler.UserHandler) {
-	g := r.Group("/api/users")
-	g.POST("/", userHandler.Create)
-	g.PUT("/{id}", userHandler.Update)
-	g.DELETE("/{id}", userHandler.Delete)
+func AddPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
+	g := r.Group("/api")
+	g.POST("/users", userHandler.Create)
+	g.GET("/jobs", jobHandler.List)
+	g.GET("/jobs/{id}", jobHandler.Get)
 }
 
-func AddJobRoutes(r router.Router, jobHandler *handler.JobHandler) {
-	g := r.Group("/api/jobs")
-	g.GET("/", jobHandler.List)
-	g.POST("/", jobHandler.Create)
-	g.GET("/{id}", jobHandler.Get)
-	g.PUT("/{id}", jobHandler.Update)
-	g.DELETE("/{id}", jobHandler.Delete)
+func AddPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
+	jwt_secret := config.JWTSecret
+	g := r.Group("/api", middleware.JwtAuth(jwt_secret))
+	g.PUT("/users/{id}", userHandler.Update)
+	g.DELETE("/users/{id}", userHandler.Delete)
+	g.POST("/jobs", jobHandler.Create)
+	g.PUT("/jobs/{id}", jobHandler.Update)
+	g.DELETE("/jobs/{id}", jobHandler.Delete)
 }
 
 func AddSwaggerRoutes(r router.Router) {
