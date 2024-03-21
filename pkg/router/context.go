@@ -1,6 +1,7 @@
 package router
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 )
@@ -55,4 +56,12 @@ func (c *Context) SendError(status int, err error) {
 	c.Writer.Header().Set("Content-Type", "application/json")
 	c.Writer.WriteHeader(status)
 	c.Writer.Write([]byte(`{"error": "` + err.Error() + `"}`))
+}
+
+func (c *Context) Set(key string, value interface{}) {
+	c.Request = c.Request.WithContext(context.WithValue(c.Request.Context(), key, value))
+}
+
+func (c *Context) Get(key string) interface{} {
+	return c.Request.Context().Value(key)
 }
