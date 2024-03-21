@@ -33,8 +33,10 @@ func (c *Context) HeaderParam(key string) string {
 	return c.Request.Header.Get(key)
 }
 
+// BindJSON binds the request body to a struct, and it must
+// receive a pointer to the struct
 func (c *Context) BindJSON(v interface{}) error {
-	return json.NewDecoder(c.Request.Body).Decode(&v)
+	return json.NewDecoder(c.Request.Body).Decode(v)
 }
 
 func (c *Context) SendJSON(status int, data interface{}) {

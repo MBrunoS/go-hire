@@ -22,7 +22,7 @@ func NewJobHandler(usecase *usecases.JobUseCase) *JobHandler {
 
 func (h *JobHandler) Create(c *router.Context) {
 	var input dto.CreateJobInputDTO
-	if err := c.BindJSON(input); err != nil {
+	if err := c.BindJSON(&input); err != nil {
 		c.SendError(http.StatusBadRequest, errors.New("request body is empty or malformed"))
 		return
 	}
@@ -64,7 +64,7 @@ func (h *JobHandler) Update(c *router.Context) {
 	id := c.PathParam("id")
 
 	var input dto.UpdateJobInputDTO
-	if err := c.BindJSON(input); err != nil {
+	if err := c.BindJSON(&input); err != nil {
 		c.SendError(http.StatusBadRequest, err)
 		return
 	}

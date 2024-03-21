@@ -9,17 +9,19 @@ import (
 )
 
 func AddUserRoutes(r router.Router, userHandler *handler.UserHandler) {
-	r.POST("/api/users", userHandler.Create)
-	r.PUT("/api/users/{id}", userHandler.Update)
-	r.DELETE("/api/users/{id}", userHandler.Delete)
+	g := r.Group("/api/users")
+	g.POST("/", userHandler.Create)
+	g.PUT("/{id}", userHandler.Update)
+	g.DELETE("/{id}", userHandler.Delete)
 }
 
 func AddJobRoutes(r router.Router, jobHandler *handler.JobHandler) {
-	r.GET("/api/jobs", jobHandler.List)
-	r.POST("/api/jobs", jobHandler.Create)
-	r.GET("/api/jobs/{id}", jobHandler.Get)
-	r.PUT("/api/jobs/{id}", jobHandler.Update)
-	r.DELETE("/api/jobs/{id}", jobHandler.Delete)
+	g := r.Group("/api/jobs")
+	g.GET("/", jobHandler.List)
+	g.POST("/", jobHandler.Create)
+	g.GET("/{id}", jobHandler.Get)
+	g.PUT("/{id}", jobHandler.Update)
+	g.DELETE("/{id}", jobHandler.Delete)
 }
 
 func AddSwaggerRoutes(r router.Router) {
