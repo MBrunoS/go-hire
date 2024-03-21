@@ -8,6 +8,7 @@ import (
 	"github.com/mbrunos/go-hire/internal/infra/http/handler"
 	"github.com/mbrunos/go-hire/internal/infra/http/routes"
 	"github.com/mbrunos/go-hire/internal/infra/http/server"
+	"github.com/mbrunos/go-hire/pkg/middleware/requestlogger"
 )
 
 func main() {
@@ -37,6 +38,8 @@ func main() {
 	userHandler := handler.NewUserHandler(userUseCase)
 
 	s := server.NewServer(config.ServerPort)
+	s.Router.Use(requestlogger.Logger)
+
 	routes.AddUserRoutes(s.Router, userHandler)
 	routes.AddJobRoutes(s.Router, jobHandler)
 	routes.AddSwaggerRoutes(s.Router)
