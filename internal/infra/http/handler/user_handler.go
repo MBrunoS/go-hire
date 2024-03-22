@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -84,6 +85,13 @@ func (h *UserHandler) Update(c *router.Context) {
 	}
 
 	id := c.PathParam("id")
+	user_id := c.Get("user_id").(string)
+
+	if id != user_id {
+		c.SendError(http.StatusForbidden, errors.New("you can only update your own user"))
+		return
+	}
+
 	user, err := h.userUseCase.UpdateUser(id, &input)
 
 	if err != nil {
@@ -96,6 +104,12 @@ func (h *UserHandler) Update(c *router.Context) {
 
 func (h *UserHandler) Delete(c *router.Context) {
 	id := c.PathParam("id")
+	user_id := c.Get("user_id").(string)
+
+	if id != user_id {
+		c.SendError(http.StatusForbidden, errors.New("you can only delete your own user"))
+		return
+	}
 
 	_, err := h.userUseCase.FindUserByID(id)
 

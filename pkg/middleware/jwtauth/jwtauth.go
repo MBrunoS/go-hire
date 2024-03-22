@@ -36,7 +36,7 @@ func JwtAuthMiddleware(secret string) router.Middleware {
 				return
 			}
 
-			c.Set("claims", claims)
+			c.Set("user_id", claims.UserID)
 			next(c)
 		}
 	}
