@@ -2,41 +2,55 @@ package jwtauth
 
 import (
 	"errors"
+	"net/http"
+	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/mbrunos/go-hire/pkg/router"
 )
 
 type Claims struct {
-	UserID uint64 `json:"user_id"`
-	jwt.Claims
+	UserID string `json:"user_id"`
+	jwt.RegisteredClaims
 }
 
-func JwtAuth(secret string) router.Middleware {
+func JwtAuthMiddleware(secret string) router.Middleware {
 	return func(next router.HandlerFunc) router.HandlerFunc {
 		return func(c *router.Context) {
-			token := c.HeaderParam("Authorization")
-			if token == "" {
-				c.SendError(401, errors.New("unauthorized"))
+			tokenStr := c.HeaderParam("Authorization")
+			if tokenStr == "" {
+				c.SendError(http.StatusUnauthorized, errors.New("unauthorized"))
 				return
 			}
+
+			token := strings.Split(tokenStr, "Bearer ")[1]
 
 			claims := &Claims{}
 			tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 				return []byte(secret), nil
 			})
-			if err != nil {
-				c.SendError(401, errors.New("unauthorized"))
-				return
-			}
-			if !tkn.Valid {
-				c.SendError(401, errors.New("invalid token"))
+
+			if err != nil || !tkn.Valid {
+				c.SendError(http.StatusUnauthorized, errors.New("invalid token"))
 				return
 			}
 
 			c.Set("claims", claims)
-			println("claims", claims)
 			next(c)
 		}
 	}
+}
+
+func NewToken(secret, userId string) (string, error) {
+	exp := time.Now().Add(5 * time.Minute)
+	claims := &Claims{
+		UserID: userId,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(exp),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
 }
