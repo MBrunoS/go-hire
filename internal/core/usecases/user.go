@@ -50,17 +50,13 @@ func (u *UserUseCase) FindUserByID(idStr string) (*dto.UserOutputDTO, error) {
 	}, nil
 }
 
-func (u *UserUseCase) FindUserByEmail(email string) (*dto.UserOutputDTO, error) {
+func (u *UserUseCase) FindUserByEmail(email string) (*entity.User, error) {
 	user, err := u.repository.FindByEmail(email)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.UserOutputDTO{
-		ID:    user.ID.String(),
-		Name:  user.Name,
-		Email: user.Email,
-	}, nil
+	return user, nil
 }
 
 func (u *UserUseCase) UpdateUser(idStr string, input *dto.UpdateUserInputDTO) (*dto.UserOutputDTO, error) {

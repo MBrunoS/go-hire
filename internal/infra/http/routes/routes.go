@@ -12,7 +12,8 @@ import (
 
 func AddPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
 	g := r.Group("/api")
-	g.POST("/users", userHandler.Create)
+	g.POST("/signup", userHandler.SignUp)
+	g.POST("/login", userHandler.Login)
 	g.GET("/jobs", jobHandler.List)
 	g.GET("/jobs/{id}", jobHandler.Get)
 }
