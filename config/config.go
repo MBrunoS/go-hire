@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -11,6 +12,7 @@ var (
 	logger     *Logger
 	ServerPort string
 	JWTSecret  string
+	JWTExp     time.Duration
 )
 
 func Init() error {
@@ -23,6 +25,11 @@ func Init() error {
 
 	ServerPort = os.Getenv("SERVER_PORT")
 	JWTSecret = os.Getenv("JWT_SECRET")
+	JWTExp, err = time.ParseDuration(os.Getenv("JWT_EXP"))
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

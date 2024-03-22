@@ -42,8 +42,8 @@ func JwtAuthMiddleware(secret string) router.Middleware {
 	}
 }
 
-func NewToken(secret, userId string) (string, error) {
-	exp := time.Now().Add(5 * time.Minute)
+func NewToken(secret, userId string, expiresIn time.Duration) (string, error) {
+	exp := time.Now().Add(expiresIn)
 	claims := &Claims{
 		UserID: userId,
 		RegisteredClaims: jwt.RegisteredClaims{

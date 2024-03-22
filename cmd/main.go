@@ -35,7 +35,7 @@ func main() {
 
 	userRepo := repository.NewUserRepository(db)
 	userUseCase := usecases.NewUserUseCase(userRepo)
-	userHandler := handler.NewUserHandler(userUseCase, config.JWTSecret)
+	userHandler := handler.NewUserHandler(userUseCase, config.JWTSecret, config.JWTExp)
 
 	s := server.NewServer(config.ServerPort)
 	s.Router.Use(middleware.Logger)

@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/mbrunos/go-hire/internal/core/dto"
 	"github.com/mbrunos/go-hire/internal/core/usecases"
@@ -13,12 +14,14 @@ import (
 type UserHandler struct {
 	userUseCase *usecases.UserUseCase
 	jwtSecret   string
+	jwtExp      time.Duration
 }
 
-func NewUserHandler(u *usecases.UserUseCase, secret string) *UserHandler {
+func NewUserHandler(u *usecases.UserUseCase, secret string, exp time.Duration) *UserHandler {
 	return &UserHandler{
 		userUseCase: u,
 		jwtSecret:   secret,
+		jwtExp:      exp,
 	}
 }
 
@@ -41,7 +44,7 @@ func (h *UserHandler) Login(c *router.Context) {
 		return
 	}
 
-	token, err := jwtauth.NewToken(h.jwtSecret, user.ID.String())
+	token, err := jwtauth.NewToken(h.jwtSecret, user.ID.String(), h.jwtExp)
 
 	if err != nil {
 		c.SendError(http.StatusInternalServerError, err)
