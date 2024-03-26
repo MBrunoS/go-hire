@@ -4,12 +4,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/mbrunos/go-hire/pkg/logger"
 	"gorm.io/gorm"
 )
 
 var (
 	db         *gorm.DB
-	logger     *Logger
+	log        logger.Logger
 	ServerPort string
 	JWTSecret  string
 	JWTExp     time.Duration
@@ -38,9 +39,9 @@ func GetDB() *gorm.DB {
 	return db
 }
 
-func GetLogger() *Logger {
-	if logger == nil {
-		logger = NewLogger()
+func GetLogger() logger.Logger {
+	if log == nil {
+		log = logger.NewDefaultLogger()
 	}
-	return logger
+	return log
 }
