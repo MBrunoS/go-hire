@@ -9,6 +9,20 @@ import (
 	"github.com/mbrunos/go-hire/pkg/middleware"
 )
 
+// @title Go Hire API
+// @version 1
+// @description This is a simple API for managing job offers and users.
+
+// @contact.name Maurício Bruno da Silva
+// @contact.url https://mbrunos.dev
+// @contact.email contact@mbrunos.dev
+
+// @host localhost:8080
+// @BasePath /api/v1
+// @securityDefinitions.apiKey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	logger := config.GetLogger()
 

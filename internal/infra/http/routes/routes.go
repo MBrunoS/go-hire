@@ -11,7 +11,7 @@ import (
 )
 
 func addPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
-	g := r.Group("/api")
+	g := r.Group("/api/v1")
 	g.POST("/signup", userHandler.SignUp)
 	g.POST("/login", userHandler.Login)
 	g.GET("/jobs", jobHandler.List)
@@ -20,7 +20,7 @@ func addPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandl
 
 func addPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
 	jwt_secret := config.JWTSecret
-	g := r.Group("/api", middleware.JwtAuth(jwt_secret))
+	g := r.Group("/api/v1", middleware.JwtAuth(jwt_secret))
 	g.PUT("/users/{id}", userHandler.Update)
 	g.DELETE("/users/{id}", userHandler.Delete)
 	g.POST("/jobs", jobHandler.Create)
@@ -29,9 +29,9 @@ func addPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHand
 }
 
 func addSwaggerRoutes(r router.Router) {
-	r.GET("/swagger/{any...}", func(c *router.Context) {
+	r.GET("/docs/{any...}", func(c *router.Context) {
 		httpSwagger.Handler(
-			httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
+			httpSwagger.URL("http://localhost:8080/docs/doc.json"),
 		).ServeHTTP(c.Writer, c.Request)
 	})
 }

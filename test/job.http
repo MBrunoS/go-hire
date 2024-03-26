@@ -1,34 +1,36 @@
 ### List jobs
-GET http://localhost:8080/api/jobs
+GET http://localhost:8080/api/v1/jobs
 
 ### Get job by id
-GET http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
+GET http://localhost:8080/api/v1/jobs/cebf14ef-1865-4d2f-8829-e95baa3b2834
 
 ### Create job
-POST http://localhost:8080/api/jobs
+POST http://localhost:8080/api/v1/jobs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGY5YWQwNmYtNzAxZS00NjZjLWFkNjAtN2QyNWUzMGJlODFjIiwiZXhwIjoxNzExNDgxMjMxfQ.SYKKGR6mADRCPCSLiocfHSpl5tSHtEG19MG2nMUSRiE
 
 {
   "title": "Job 2",
   "description": "Description 2",
   "location": "Location 2",
   "company": "Company 2",
-  "remote": false,
-  "salary": 6000
+  "salary": 6000,
+  "remote": false
 }
 
 ### Update job
-PUT http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
+PUT http://localhost:8080/api/v1/jobs/cebf14ef-1865-4d2f-8829-e95baa3b2834
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGY5YWQwNmYtNzAxZS00NjZjLWFkNjAtN2QyNWUzMGJlODFjIiwiZXhwIjoxNzExNDgxMjMxfQ.SYKKGR6mADRCPCSLiocfHSpl5tSHtEG19MG2nMUSRiE
 
 {
-  "title": "Job 2",
-  "description": "Description 2.1",
-  "location": "Location 2",
-  "company": "Company 2",
-  "salary": 6500,
+  "title": "Job 1",
+  "description": "Description 1",
+  "location": "Location 1",
+  "company": "Company 1",
+  "salary": 9505,
   "remote": true
 }
 
 ### Delete job
-DELETE http://localhost:8080/api/jobs/6c1c3688-a9b8-406f-8373-ab25b0eab5af
+DELETE http://localhost:8080/api/v1/jobs/5953a918-ade2-4038-a1fb-61290c29d7d3

@@ -5,14 +5,14 @@ APP_NAME=go-hire
 default: run-with-docs
 
 run:
-	@go run main.go
+	@go run cmd/main.go
 
 run-with-docs:
 	@swag init
-	@go run main.go
+	@go run cmd/main.go
 
 build:
-	@go build -o $(APP_NAME) main.go
+	@go build -o $(APP_NAME) cmd/main.go
 
 test:
 	@go test ./...
