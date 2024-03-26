@@ -3,8 +3,6 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/mbrunos/go-hire/config"
-	"github.com/mbrunos/go-hire/internal/core/usecases"
-	"github.com/mbrunos/go-hire/internal/infra/database/repository"
 	"github.com/mbrunos/go-hire/internal/infra/http/handler"
 	"github.com/mbrunos/go-hire/internal/infra/http/routes"
 	"github.com/mbrunos/go-hire/internal/infra/http/server"
@@ -27,22 +25,13 @@ func main() {
 		return
 	}
 
+	s := server.NewServer(config.ServerPort, logger)
+	s.Router.Use(middleware.RequestLogger(logger))
+
 	db := config.GetDB()
+	jobHandler, userHandler := handler.Setup(db, config.JWTSecret, config.JWTExp)
 
-	jobRepo := repository.NewJobRepository(db)
-	jobUseCase := usecases.NewJobUseCase(jobRepo)
-	jobHandler := handler.NewJobHandler(jobUseCase)
-
-	userRepo := repository.NewUserRepository(db)
-	userUseCase := usecases.NewUserUseCase(userRepo)
-	userHandler := handler.NewUserHandler(userUseCase, config.JWTSecret, config.JWTExp)
-
-	s := server.NewServer(config.ServerPort)
-	s.Router.Use(middleware.Logger)
-
-	routes.AddPublicRoutes(s.Router, userHandler, jobHandler)
-	routes.AddPrivateRoutes(s.Router, userHandler, jobHandler)
-	routes.AddSwaggerRoutes(s.Router)
+	routes.Setup(s.Router, userHandler, jobHandler)
 
 	if err := s.Start(); err != nil {
 		logger.ErrorF("Error starting server: %s", err)

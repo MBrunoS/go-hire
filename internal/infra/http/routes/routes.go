@@ -10,7 +10,7 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
-func AddPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
+func addPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
 	g := r.Group("/api")
 	g.POST("/signup", userHandler.SignUp)
 	g.POST("/login", userHandler.Login)
@@ -18,7 +18,7 @@ func AddPublicRoutes(r router.Router, userHandler *handler.UserHandler, jobHandl
 	g.GET("/jobs/{id}", jobHandler.Get)
 }
 
-func AddPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
+func addPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
 	jwt_secret := config.JWTSecret
 	g := r.Group("/api", middleware.JwtAuth(jwt_secret))
 	g.PUT("/users/{id}", userHandler.Update)
@@ -28,10 +28,16 @@ func AddPrivateRoutes(r router.Router, userHandler *handler.UserHandler, jobHand
 	g.DELETE("/jobs/{id}", jobHandler.Delete)
 }
 
-func AddSwaggerRoutes(r router.Router) {
+func addSwaggerRoutes(r router.Router) {
 	r.GET("/swagger/{any...}", func(c *router.Context) {
 		httpSwagger.Handler(
 			httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
 		).ServeHTTP(c.Writer, c.Request)
 	})
+}
+
+func Setup(r router.Router, userHandler *handler.UserHandler, jobHandler *handler.JobHandler) {
+	addPublicRoutes(r, userHandler, jobHandler)
+	addPrivateRoutes(r, userHandler, jobHandler)
+	addSwaggerRoutes(r)
 }

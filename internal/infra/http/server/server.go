@@ -1,18 +1,21 @@
 package server
 
 import (
+	"github.com/mbrunos/go-hire/pkg/logger"
 	"github.com/mbrunos/go-hire/pkg/router"
 )
 
 type Server struct {
 	Router router.Router
 	Port   string
+	Logger logger.Logger
 }
 
-func NewServer(port string) *Server {
+func NewServer(port string, logger logger.Logger) *Server {
 	return &Server{
 		Router: router.NewDefaultRouter(),
 		Port:   port,
+		Logger: logger,
 	}
 }
 

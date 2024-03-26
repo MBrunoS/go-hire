@@ -6,4 +6,4 @@ import (
 )
 
 var JwtAuth = jwtauth.JwtAuthMiddleware
-var Logger = requestlogger.Logger
+var RequestLogger = requestlogger.RequestLogger

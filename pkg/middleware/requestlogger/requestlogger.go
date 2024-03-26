@@ -1,15 +1,16 @@
 package requestlogger
 
 import (
-	"github.com/mbrunos/go-hire/config"
+	"github.com/mbrunos/go-hire/pkg/logger"
 	"github.com/mbrunos/go-hire/pkg/router"
 )
 
-func Logger(next router.HandlerFunc) router.HandlerFunc {
-	logger := config.GetLogger()
+func RequestLogger(logger logger.Logger) router.Middleware {
+	return func(next router.HandlerFunc) router.HandlerFunc {
 
-	return func(c *router.Context) {
-		logger.Info(c.Request.Method, c.Request.URL.Path)
-		next(c)
+		return func(c *router.Context) {
+			logger.Info(c.Request.Method, c.Request.URL.Path)
+			next(c)
+		}
 	}
 }
